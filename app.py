@@ -90,11 +90,11 @@ def upload_file():
         data=df.values
 
         # merubah DD categorical ke numeric
-        for i in range(0,data.shape[0]):
-            temp=data[i][2]
-            data[i][2]=DD_capt[data[i][2]]
-        # for i in range(data.shape[0]):
-        #     data[i][2] = DD_capt.get(data[i][2])
+        # for i in range(0,data.shape[0]):
+        #     temp=data[i][2]
+        #     data[i][2]=DD_capt[data[i][2]]
+        for i in range(data.shape[0]):
+            data[i][2] = DD_capt.get(data[i][2])
 
 
         # normalisasi data dengan minmax scaler
@@ -122,17 +122,17 @@ def upload_file():
 def download_table():
     csv_data = df.to_csv(index=False)
 
-    with open('temp_table.csv', 'w') as f:
+    with open('hasil_prediksi.csv', 'w') as f:
         f.write(csv_data)
 
-    return send_file('temp_table.csv', as_attachment=True)
+    return send_file('hasil_prediksi.csv', as_attachment=True)
 
 @app.route('/downloadxlsx', methods=['POST'])
 def download_table_xlsx():
 
-    df.to_excel('temp_table.xlsx', index=False)
+    df.to_excel('hasil_prediksi.xlsx', index=False)
 
-    return send_file('temp_table.xlsx', as_attachment=True)
+    return send_file('hasil_prediksi.xlsx', as_attachment=True)
 
 @app.route('/reset_prediction', methods=['POST'])
 def reset_prediction():
