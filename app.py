@@ -81,10 +81,19 @@ def upload_file():
         # Get uploaded file
         file = request.files['file']
 
+        #default delimiter
+        delimiter = ','
+        first_line = file.stream.readline().decode()
+        if ';' in first_line:
+            delimiter = ';'
+
         global df
 
         # Read CSV file
-        df = pd.read_csv(file,  delimiter=',')
+        file.stream.seek(0)  # Reset file pointer to beginning
+        df = pd.read_csv(file, delimiter=delimiter)
+
+        # df = pd.read_csv(file,  delimiter=delimiter)
 
         # mengubah dari dataframe ke numpy array
         data=df.values
@@ -140,6 +149,11 @@ def reset_prediction():
     # Anda mungkin perlu menambahkan lebih banyak kode di sini
     df_prediction = pd.DataFrame(columns=['T', 'P', 'DD', 'Td', 'result'])
     return redirect('/')  # Redirect ke halaman utama setelah mereset prediksi
+
+@app.route('/download_template', methods=['POST'])
+def download_template():
+    template_path = 'src/template_data.csv'  # Ganti dengan path ke file template Anda
+    return send_file(template_path, as_attachment=True)
     
 if __name__ == '__main__':
     app.run(debug=True)
